@@ -9,7 +9,7 @@ struct codeMap{
 	char description[12];
 };
 
-class Apex5400BillAcceptor{
+class Apex5400BillAcceptor{ 
 	
 	private:
 		int pin_enable_line;
@@ -35,59 +35,16 @@ class Apex5400BillAcceptor{
 		
 	public:
 		ReceiveOnlySoftwareSerial *mySerial;
-		Apex5400BillAcceptor(int a, int b, int c, int d){
-			
-			pin_enable_line = a;
-			pinMode(pin_enable_line, OUTPUT);
-			digitalWrite(pin_enable_line, LOW);
-			
-			pin_interrupt_line = b;						
-			pinMode(pin_interrupt_line, INPUT);
-			
-			pin_send_line = c;
-			pinMode(pin_send_line, OUTPUT);					
-			
-			pin_ttl_rx = d;
-			pinMode(pin_ttl_rx, INPUT_PULLUP);
-			mySerial = new ReceiveOnlySoftwareSerial(pin_ttl_rx);
-			mySerial->begin(600);
-		}
+		Apex5400BillAcceptor(int, int, int, int);
 	
-		int checkForBill(){
-			if (digitalRead(pin_interrupt_line) == LOW){
-				digitalWrite(pin_send_line, LOW);
-				digitalWrite(pin_send_line, HIGH);  
-
-				delay(5);
-				
-				if (mySerial->available()){
-					int code = mySerial->read();					
-					return code;
-				}
-			}
-			return 0;
-		}
+		int checkForBill();
 		
-		char* getDescription(int codeFromBillAcceptor){
-			for(int i=0; i < sizeof(codes)/sizeof(codes[0]); i++){
-				if (codes[i].code == codeFromBillAcceptor){
-					return codes[i].description;
-				}
-			}
-			return "(code undefined)";
-		}
+		char* getDescription(int);
 		
-		void enable(){
-			digitalWrite(pin_enable_line, LOW);
-		}
+		void enable();
 		
-		void disable(){
-			digitalWrite(pin_enable_line, HIGH);
-		}
+		void disable();
 		
-		void toggle(){
-			digitalWrite(pin_enable_line, !digitalRead(pin_enable_line));
-		}
-	
+		void toggle();	
 };
 #endif
